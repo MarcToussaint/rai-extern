@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 lib=${@: -1}
 git=${HOME}/git
-pre=${HOME}/local
+pre=${HOME}/.local
 
 while getopts "gtc" o; do
     case "${o}" in
@@ -32,6 +32,13 @@ cd ${git}
 
 case ${lib} in
 
+    botop)
+	git clone --single-branch --recurse-submodules https://github.com/MarcToussaint/botop.git
+	export PYTHONVERSION=`python3 -c "import sys; print(str(sys.version_info[0])+'.'+str(sys.version_info[1]))"`
+	cmake -DPYBIND11_PYTHON_VERSION=$PYTHONVERSION -DCMAKE_INSTALL_PREFIX=${pre} ${lib} -B ${lib}/build
+	make -C ${lib}/build install
+	;;
+	
     libfranka)
 	git clone --single-branch -b 0.10.0 --recurse-submodules https://github.com/frankaemika/libfranka
 	cmake -DCMAKE_INSTALL_PREFIX=${pre} -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF ${lib} -B ${lib}/build
@@ -48,7 +55,7 @@ case ${lib} in
     librealsense)
 	#sudo apt install --yes libusb-1.0-0-dev libglfw3-dev libgtk-3-dev
         git clone --recurse-submodules https://github.com/IntelRealSense/librealsense.git
-	cmake -DCMAKE_INSTALL_PREFIX=${pre} -DCMAKE_BUILD_TYPE=Release ${lib} -B ${lib}/build
+	cmake -DCMAKE_INSTALL_PREFIX=${pre} -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=OFF ${lib} -B ${lib}/build
 	make -C ${lib}/build install
 	;;
 
@@ -87,7 +94,7 @@ case ${lib} in
 
     fcl)
 	git clone --single-branch -b fcl-0.5 https://github.com/flexible-collision-library/fcl.git
-        cmake -DCMAKE_INSTALL_PREFIX=${pre} -DFCL_STATIC_LIBRARY=ON -DFCL_BUILD_TESTS=OFF -DCMAKE_CXX_FLAGS="-Wno-deprecated-copy -Wno-class-memaccess -Wno-maybe-uninitialized" ${lib} -B ${lib}/build
+        cmake -DCMAKE_INSTALL_PREFIX=${pre} -DFCL_STATIC_LIBRARY=ON -DFCL_BUILD_TESTS=OFF -DFCL_WITH_OCTOMAP=OFF -DCMAKE_CXX_FLAGS="-Wno-deprecated-copy -Wno-class-memaccess -Wno-maybe-uninitialized" ${lib} -B ${lib}/build
 	make -C ${lib}/build install
 	;;
 
