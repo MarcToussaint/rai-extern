@@ -50,12 +50,13 @@ case ${lib} in
         cd PhysX/physx; ./generate_projects.sh linux; cd compiler/linux-release/
 	cmake ../../compiler/public -DPX_BUILDPVDRUNTIME=OFF -DPX_BUILDSNIPPETS=OFF -DCMAKE_INSTALL_PREFIX=${pre}
 	make install
+	cd ${pre}/lib; ln -s ../bin/linux.clang/release PhysX
 	;;
     
     librealsense)
 	#sudo apt install --yes libusb-1.0-0-dev libglfw3-dev libgtk-3-dev
-        git clone --recurse-submodules https://github.com/IntelRealSense/librealsense.git
-	cmake -DCMAKE_INSTALL_PREFIX=${pre} -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=OFF ${lib} -B ${lib}/build
+        git clone --single-branch --recurse-submodules https://github.com/IntelRealSense/librealsense.git
+	cmake -DCMAKE_INSTALL_PREFIX=${pre} -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=OFF ${lib} -B ${lib}/build
 	make -C ${lib}/build install
 	;;
 
