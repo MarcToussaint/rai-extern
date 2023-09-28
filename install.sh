@@ -1,10 +1,12 @@
 #!/bin/bash
 
+usage() { echo "Usage: $0 [-gtc] [-v <version>] <package>" 1>&2; exit 1; }
+
 lib=${@: -1}
 git=${HOME}/git
 pre=${HOME}/.local
 
-while getopts "gtc" o; do
+while getopts "gtcv:" o; do
     case "${o}" in
         g)
             pre=/usr/local
@@ -16,6 +18,10 @@ while getopts "gtc" o; do
 	c)
 	    clean="yes"
 	    ;;
+
+	v)
+	    version=${OPTARG}
+            ;;
 	
         *)
             usage
@@ -23,10 +29,14 @@ while getopts "gtc" o; do
     esac
 done
 
+#if [ -z "${s}" ] || [ -z "${p}" ]; then
+#    usage
+#fi
+
 mkdir -p ${git}
 mkdir -p ${pre}
 
-echo 'Installing' ${lib} ' -- sources:' ${git} ' -- prefix (compiled library):' ${pre}
+echo 'Installing' ${lib} ' -- sources:' ${git} ' -- prefix (compiled library):' ${pre} ' -- version' ${version} ' -- clean' ${clean}
 
 cd ${git}
 
@@ -40,7 +50,8 @@ case ${lib} in
 	;;
 	
     libfranka)
-	git clone --single-branch -b 0.10.0 --recurse-submodules https://github.com/frankaemika/libfranka
+	if [ -z "$version" ]; then version="0.10.0"; fi
+	git clone --single-branch -b ${version} --recurse-submodules https://github.com/frankaemika/libfranka
 	cmake -DCMAKE_INSTALL_PREFIX=${pre} -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF ${lib} -B ${lib}/build
 	make -C ${lib}/build install
 	;;
@@ -135,8 +146,14 @@ case ${lib} in
 	make -C ${lib}/build install
 	;;
 
+    test)
+	if [ -z "$version" ]; then version="default"; fi
+	echo 'just testing -- version:' ${version}
+	;;
+	
     *)
 	echo 'package' ${lib} 'not defined'
+	usage
 esac
 
 cd ${git}
