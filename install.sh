@@ -43,9 +43,9 @@ cd ${git}
 case ${lib} in
 
     botop)
-	git clone --single-branch --recurse-submodules https://github.com/MarcToussaint/botop.git
-	export PYTHONVERSION=`python3 -c "import sys; print(str(sys.version_info[0])+'.'+str(sys.version_info[1]))"`
-	cmake -DPYBIND11_PYTHON_VERSION=$PYTHONVERSION -DCMAKE_INSTALL_PREFIX=${pre} ${lib} -B ${lib}/build
+	git clone --recurse-submodules https://github.com/MarcToussaint/botop.git
+	export PY_VERSION=`python3 -c "import sys; print(str(sys.version_info[0])+'.'+str(sys.version_info[1]))"`
+	cmake -DPY_VERSION=$PY_VERSION -DCMAKE_INSTALL_PREFIX=${pre} ${lib} -B ${lib}/build
 	make -C ${lib}/build install
 	;;
 	
