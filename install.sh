@@ -50,10 +50,13 @@ case ${lib} in
 	;;
 	
     libfranka)
-	if [ -z "$version" ]; then version="0.10.0"; fi
+	if [ -z "$version" ]; then version="0.10.0"; fi #old: 0.7.1
 	git clone --single-branch -b ${version} --recurse-submodules https://github.com/frankaemika/libfranka
-	cmake -DCMAKE_INSTALL_PREFIX=${pre} -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF ${lib} -B ${lib}/build
-	make -C ${lib}/build install
+	cd libfranka
+	wget https://github.com/MarcToussaint/rai-extern/raw/main/franka.patch
+	patch -p1 CMakeLists.txt franka.patch
+	cmake -DCMAKE_INSTALL_PREFIX=${pre} -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF . -B build
+	make -C build install
 	;;
 
     physx)
@@ -67,7 +70,7 @@ case ${lib} in
     librealsense)
 	#sudo apt install --yes libusb-1.0-0-dev libglfw3-dev libgtk-3-dev
         git clone --single-branch --recurse-submodules https://github.com/IntelRealSense/librealsense.git
-	cmake -DCMAKE_INSTALL_PREFIX=${pre} -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=OFF ${lib} -B ${lib}/build
+	cmake -DCMAKE_INSTALL_PREFIX=${pre} -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_GRAPHICAL_EXAMPLES=OFF -DBUILD_TOOLS=OFF ${lib} -B ${lib}/build
 	make -C ${lib}/build install
 	;;
 

@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 905e8eb..493c37c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,7 +18,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+ if(MSVC)
+   add_compile_options(/W0)
+ else()
+-  add_compile_options(-Wall -Wextra)
++  add_compile_options(-Wall -Wextra -fPIC)
+ endif()
+ 
+ set(THIRDPARTY_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty" CACHE PATH
+@@ -49,11 +49,13 @@ if(BUILD_COVERAGE)
+   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} --coverage")
+ endif()
+ 
++option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
++
+ ## Submodules
+-add_subdirectory(common)
++#add_subdirectory(common)
+ 
+ ## Library
+-add_library(franka SHARED
++add_library(franka
+   src/control_loop.cpp
+   src/control_tools.cpp
+   src/control_types.cpp
+@@ -102,6 +104,10 @@ if(MSVC)
+   )
+ endif()
+ 
++include_directories(
++  common/include
++)
++
+ target_include_directories(franka PUBLIC
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+   $<INSTALL_INTERFACE:include>
+@@ -112,7 +118,7 @@ target_link_libraries(franka PRIVATE
+   Poco::Net
+   Eigen3::Eigen3
+   Threads::Threads
+-  libfranka-common
++#  libfranka-common
+ )
+ 
+ ## Installation
