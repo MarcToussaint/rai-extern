@@ -99,6 +99,13 @@ case ${lib} in
 	make install
 	;;
 
+    hdf5)
+	git clone --single-branch -b hdf5-1_10_4 https://github.com/HDFGroup/hdf5.git
+	cd hdf5
+	env CFLAGS="-fPIC" CXXFLAGS="-fPIC" ./configure --prefix=${pre} --enable-cxx --disable-tests --disable-tools --disable-shared
+	make install
+	;;
+
     qhull)
 	git clone --single-branch -b v7.3.2 https://github.com/qhull/qhull.git
 	env CFLAGS="-fPIC" CXXFLAGS="-fPIC" cmake -DCMAKE_INSTALL_PREFIX=${pre} ${lib} -B ${lib}/build2
