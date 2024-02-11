@@ -68,7 +68,8 @@ case ${lib} in
 
     physx)
         git clone --single-branch -b release/104.1 https://github.com/NVIDIA-Omniverse/PhysX.git
-        cd PhysX/physx; ./generate_projects.sh linux; cd compiler/linux-release/
+	cd PhysX/physx/buildtools/packman; ./packman update -y
+        cd ../..; ./generate_projects.sh linux; cd compiler/linux-release/
 	cmake ../../compiler/public -DPX_BUILDPVDRUNTIME=OFF -DPX_BUILDSNIPPETS=OFF -DCMAKE_INSTALL_PREFIX=${pre}
 	make install
 	cd ${pre}/lib; ln -s ../bin/linux.clang/release PhysX
