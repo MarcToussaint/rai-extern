@@ -116,9 +116,9 @@ case ${lib} in
 
     libccd)
 	git clone --single-branch -b v2.1 https://github.com/danfis/libccd.git
-	env CFLAGS="-fPIC" cmake -DCMAKE_INSTALL_PREFIX=${pre} -DBUILD_SHARED_LIBS=ON ${lib} -B ${lib}/build
+	env CFLAGS="-fPIC" cmake -DCMAKE_INSTALL_PREFIX=${pre} -DBUILD_SHARED_LIBS=ON ${lib} -DENABLE_DOUBLE_PRECISION=ON -B ${lib}/build
 	make -C ${lib}/build install
-	env CFLAGS="-fPIC" cmake -DCMAKE_INSTALL_PREFIX=${pre} -DBUILD_SHARED_LIBS=OFF ${lib} -B ${lib}/build  #compile shared AND static versions!
+	env CFLAGS="-fPIC" cmake -DCMAKE_INSTALL_PREFIX=${pre} -DBUILD_SHARED_LIBS=OFF ${lib} -DENABLE_DOUBLE_PRECISION=ON -B ${lib}/build  #compile shared AND static versions!
 	make -C ${lib}/build install
 	;;
 
