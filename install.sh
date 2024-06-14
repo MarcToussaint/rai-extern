@@ -72,7 +72,7 @@ case ${lib} in
         cd ../..; ./generate_projects.sh linux; cd compiler/linux-release/
 	cmake ../../compiler/public -DPX_BUILDPVDRUNTIME=OFF -DPX_BUILDSNIPPETS=OFF -DCMAKE_INSTALL_PREFIX=${pre}
 	make install
-	cd ${pre}/lib; ln -s ../bin/linux.clang/release PhysX
+	cd ${pre}/lib; ln -sf ../bin/linux.clang/release PhysX
 	;;
     
     librealsense)
@@ -111,7 +111,7 @@ case ${lib} in
 	git clone --single-branch -b v7.3.2 https://github.com/qhull/qhull.git
 	env CFLAGS="-fPIC" CXXFLAGS="-fPIC" cmake -DCMAKE_INSTALL_PREFIX=${pre} ${lib} -B ${lib}/build2
 	make -C ${lib}/build2 install
-	cd ${pre}/lib; ln -s libqhullstatic.a libqhull.a; cd ${pre}/include; ln -s libqhull qhull
+	cd ${pre}/lib; ln -sf libqhullstatic.a libqhull.a; cd ${pre}/include; ln -sf libqhull qhull
 	;;
 
     libccd)
@@ -160,7 +160,7 @@ case ${lib} in
     opencv)
 	git clone --single-branch -b 4.7.0 https://github.com/opencv/opencv.git
 	#git clone --single-branch -b 4.7.0 https://github.com/opencv/opencv_contrib.git
-	cmake -DCMAKE_INSTALL_PREFIX=${pre} -DWITH_VTK=OFF ${lib} -B ${lib}/build
+	cmake -DCMAKE_INSTALL_PREFIX=${pre} -DWITH_VTK=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF ${lib} -B ${lib}/build
 	make -C ${lib}/build install
 	;;
 
